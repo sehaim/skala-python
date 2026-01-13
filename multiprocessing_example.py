@@ -9,12 +9,12 @@ from typing import List
 import multiprocessing
 
 # 1. random을 사용하여 1,000만 개의 1~100,000 사이 정수 리스트 생성
-def generate_large_data(size: int = 10_000_000, lower: int = 1, upper: int = 100_000) -> List[int]:
+def generate_large_data(size: int = 10_000_000, lower: int = 1, upper: int = 100_000):
     import random
     return [random.randint(lower, upper) for _ in range(size)]
 
 # 2. 숫자가 소수인지 판별하는 함수
-def is_prime(n: int) -> bool:
+def is_prime(n):
     if n <= 1:
         return False
     for i in range(2, int(n**0.5) + 1):
@@ -24,12 +24,12 @@ def is_prime(n: int) -> bool:
 
 # 3. 두 가지 방식으로 소수의 개수 세기
 # 1 ) 단일 프로세스 방식
-def count_primes_single_process(data: List[int]) -> int:
+def count_primes_single_process(data):
     return sum(1 for number in data if is_prime(number))
 
 # 2 ) multiprocessing.Pool 사용
-def count_primes_multi_process(data: List[int], num_workers: int = None) -> int:
-    with multiprocessing.Pool(processes=num_workers) as pool:
+def count_primes_multi_process(data):
+    with multiprocessing.Pool(processes=None) as pool:
         results = pool.map(is_prime, data)
     return sum(results)
 
