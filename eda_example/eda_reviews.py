@@ -208,11 +208,7 @@ plt.show()
 
 # =========================
 # 3) AI 분석을 위한 인사이트용 정량 체크
-#    - Q1 sentiment_score가 높을 수록 rating이 높은가?
-#    - Q2 review_length가 임베딩 유사도에 영향을 미치는가?
-#    - Q3 category 별 sentiment 평균 차이
 # =========================
-
 # Q1) 상관계수
 corr = df_clean[["sentiment_score", "rating", "review_length", "num_words"]].corr(numeric_only=True)
 print("\n[Correlation matrix]")

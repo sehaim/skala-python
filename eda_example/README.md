@@ -31,7 +31,7 @@
 
 ## 1. 데이터 개요
 
-본 분석은 제공된 `reviews_1000.csv` 데이터를 기반으로 수행되었습니다. 고객 리뷰를 AI 임베딩 기반 추천 시스템에 활용하기 전 단계로서 EDA(Exploratory Data Analysis)를 진행하였습니다.
+본 분석은 제공된 `reviews_1000.csv` 데이터를 기반으로 수행되었습니다. 고객 리뷰를 AI 임베딩 기반 추천 시스템에 활용하기 전 단계로서 EDA(Exploratory Data Analysis)를 진행했습니다.
 
 - 전체 데이터 수: **1,000건**
 - 주요 컬럼:
@@ -61,7 +61,7 @@
 
   ![데이터 로드 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/data_load.png)
 
-- 데이터 구조 및 컬럼 타입을 확인하여 분석 가능 여부를 점검하였고, 이상 없음을 확인했습니다.
+- 데이터 구조 및 컬럼 타입을 확인하여 분석 가능 여부를 점검했고, 이상 없음을 확인했습니다.
 
 ### 2.2 결측치 확인 및 처리
 
@@ -95,11 +95,11 @@
 
 AI 임베딩 및 유사도 분석 전,
 리뷰 데이터의 수치적 특성과 이상치 존재 여부를 확인하기 위해
-분포 시각화 및 이상치 탐지를 수행하였습니다.
+분포 시각화 및 이상치 탐지를 수행했습니다.
 
 - #### 파생 변수 생성 및 데이터 검증
 
-  기존에 제공된 텍스트 길이 관련 컬럼의 신뢰성을 검증하기 위해, 리뷰 텍스트(`review_text`)를 기반으로 파생 변수를 생성하였습니다.
+  기존에 제공된 텍스트 길이 관련 컬럼의 신뢰성을 검증하기 위해, 리뷰 텍스트(`review_text`)를 기반으로 파생 변수를 생성했습니다.
 
   - 코드
 
@@ -122,11 +122,11 @@ AI 임베딩 및 유사도 분석 전,
 
     ![데이터 검증 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/data_check.png)
 
-  - 기존 컬럼과 재계산된 값 간의 차이를 비교한 결과, 데이터 전반에서 큰 불일치는 관찰되지 않았으며, 제공된 `review_length`, `num_words` 컬럼은 신뢰 가능한 것으로 판단하였습니다.
+  - 기존 컬럼과 재계산된 값 간의 차이를 비교한 결과, 데이터 전반에서 큰 불일치는 관찰되지 않았으며, 제공된 `review_length`, `num_words` 컬럼은 신뢰 가능한 것으로 판단했습니다.
 
 - #### 분포 시각화
 
-  주요 수치형 변수의 분포를 확인하기 위해 히스토그램과 박스플롯을 활용하였습니다.
+  주요 수치형 변수의 분포를 확인하기 위해 히스토그램과 박스플롯을 활용했습니다.
 
   - 코드
 
@@ -162,7 +162,7 @@ AI 임베딩 및 유사도 분석 전,
       ![rating 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating_histogram.png)
       ![rating boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating_boxplot.png)
 
-      - 평점은 1~5의 이산값을 가지며, 전반적으로 3~5 구간에 비교적 많이 분포하였습니다.
+      - 평점은 1~5의 이산값을 가지며, 전반적으로 3~5 구간에 비교적 많이 분포했습니다.
       - 박스플롯 기준 중앙값은 약 3 수준으로 확인되며, 특정 평점에 과도하게 치우친 분포는 관찰되지 않았습니다.
       - 이상치로 판단할 만한 극단적인 값은 존재하지 않았습니다.
 
@@ -178,7 +178,7 @@ AI 임베딩 및 유사도 분석 전,
 
 - #### 이상치 탐지 (IQR / Z-score)
 
-  분포 시각화 이후, IQR 및 Z-score 기준을 활용하여 이상치를 정량적으로 탐지하였습니다.
+  분포 시각화 이후, IQR 및 Z-score 기준을 활용하여 이상치를 정량적으로 탐지했습니다.
 
   - 코드
 
@@ -225,7 +225,7 @@ AI 임베딩 및 유사도 분석 전,
 
     ![이상치 탐지 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/IQR_ZScore.png)
 
-  - IQR 및 Z-score 기준 모두에서 이상치로 판단되는 데이터는 발견되지 않았고, 데이터 전반이 정상 범위 내에 분포하고 있음을 확인하였습니다. 따라서 이상치 제거 없이 전체 데이터를 분석 대상으로 유지하였습니다.
+  - IQR 및 Z-score 기준 모두에서 이상치로 판단되는 데이터는 발견되지 않았고, 데이터 전반이 정상 범위 내에 분포하고 있음을 확인했습니다. 따라서 이상치 제거 없이 전체 데이터를 분석 대상으로 유지했습니다.
 
 ---
 
@@ -233,7 +233,7 @@ AI 임베딩 및 유사도 분석 전,
 
 ### 3.1 주요 변수 기술 통계 요약
 
-리뷰 데이터의 전반적인 수치적 특성을 파악하기 위해 주요 변수의 기술 통계를 산출하였습니다.
+리뷰 데이터의 전반적인 수치적 특성을 파악하기 위해 주요 변수의 기술 통계를 산출했습니다.
 
 - 코드
 
@@ -260,33 +260,70 @@ AI 임베딩 및 유사도 분석 전,
 
 ### 3.2 카테고리별 평균 평점 분석 (barplot)
 
-카테고리별 평점 평균을 비교하여 상품 유형에 따른 평점 차이를 확인하였습니다.
+카테고리별 평점 평균을 비교하여 상품 유형에 따른 평점 차이를 확인했습니다.
 
-![카테고리 별 평균 평점](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/category-avg_rating.png)
+- 코드
+    ```python
+    plt.figure(figsize=(8, 4))
+    order = cat_summary.sort_values("rating_mean", ascending=False).index
+    sns.barplot(data=df_clean, x="category", y="rating", order=order, estimator=np.mean, errorbar="ci")
+    plt.title("카테고리 별 평균 평점")
+    plt.xlabel("카테고리")
+    plt.ylabel("평균 평점")
+    plt.tight_layout()
+    plt.show()
+    ```
 
-- `home`, `fashion` 카테고리가 상대적으로 높은 평균 평점을 보임
-- 카테고리 간 평균 평점 차이는 크지 않으나 순위 차이는 존재
+- 결과
+    ![카테고리 별 평균 평점](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/category-avg_rating.png)
+
+- `home`, `fashion` 카테고리가 상대적으로 높은 평균 평점을 보입니다.
+- 카테고리 간 평균 평점 차이는 크지 않으나 순위 차이는 존재합니다.
 
 ---
 
 ### 3.3 평점과 감성 점수 관계 분석 (violinplot)
 
-평점(`rating`)과 감성 점수(`sentiment_score`)의 관계를 시각화하여, 감성 점수가 평점에 영향을 주는지 확인하였습니다.
+평점(`rating`)과 감성 점수(`sentiment_score`)의 관계를 시각화하여, 감성 점수가 평점에 영향을 주는지 확인했습니다.
 
-![평점과 감성 점수 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating-sentiment_score.png)
+- 코드
+    ```python
+    plt.figure(figsize=(7, 4))
+    sns.violinplot(data=df_clean, x="rating", y="sentiment_score", inner="quartile")
+    plt.title("평점과 감성 점수 관계")
+    plt.xlabel("감성 점수(sentiment_score)")
+    plt.ylabel("평점(rating)")
+    plt.tight_layout()
+    plt.show()
+    ```
 
-- 감성 점수가 높아질수록 평점이 함께 증가하는 경향
+- 결과
+    ![평점과 감성 점수 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating-sentiment_score.png)
+
+- 감성 점수가 높아질수록 평점이 함께 증가하는 경향을 보입니다.
 
 ---
 
 ### 3.4 리뷰 길이와 평점 관계 분석 (boxplot)
 
-리뷰 길이(review_length)가 평점과 관계가 있는지 확인하기 위해 분포 기반으로 비교하였습니다.
+리뷰 길이(review_length)가 평점과 관계가 있는지 확인하기 위해 분포 기반으로 비교했습니다.
 
-![리뷰 길이와 평점 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length-avg_rating.png)
+- 코드
+    ```python
+    plt.figure(figsize=(7, 4))
+    sns.boxplot(data=df_clean, x="rating", y="review_length")
+    plt.title("리뷰 길이와 평점 관계(boxplot)")
+    plt.xlabel("평점(rating)")
+    plt.ylabel("리뷰 길이(review_length)")
+    plt.tight_layout()
+    plt.show()
+    ```
 
+- 결과
 
-- 리뷰 길이와 평점 간 직접적인 관계는 뚜렷하지 않음
+    ![리뷰 길이와 평점 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length-avg_rating.png)
+
+- 리뷰 길이와 평점 간 직접적인 관계는 뚜렷하지 않습니다.
 
 ---
 
@@ -294,99 +331,140 @@ AI 임베딩 및 유사도 분석 전,
 
 ### 4.1 감성 점수와 평점의 관계
 
-감성 점수가 높을수록 평점이 높아지는지를 정량적으로 확인하기 위해 상관계수 및 분위수 구간별 평균 평점을 계산하였습니다. 또한 감성 점수를 분위수(5등분)로 나누어, 구간별 평균 평점 변화를 확인하였습니다.
+감성 점수가 높을수록 평점이 높아지는지를 정량적으로 확인하기 위해 상관계수 및 분위수 구간별 평균 평점을 계산했습니다. 또한 감성 점수를 분위수(5등분)로 나누어, 구간별 평균 평점 변화를 확인했습니다.
 
 - 코드
-    ```python
-    corr = df_clean[["sentiment_score", "rating", "review_length", "num_words"]].corr(numeric_only=True)
 
-    print("\n[Correlation matrix]")
-    print(corr)
+  ```python
+  corr = df_clean[["sentiment_score", "rating", "review_length", "num_words"]].corr(numeric_only=True)
 
-    df_clean["sent_bin"] = pd.qcut(df_clean["sentiment_score"], q=5, duplicates="drop")
-    sent_bin_summary = df_clean.groupby("sent_bin").agg(
-    n=("review_id", "count"),
-    rating_mean=("rating", "mean"),
-    sentiment_mean=("sentiment_score", "mean"),)
+  print("\n[Correlation matrix]")
+  print(corr)
 
-    plt.figure(figsize=(9, 4))
-    sns.barplot(data=sent_bin_summary.reset_index(), x="sent_bin", y="rating_mean")
-    plt.title("감성 점수 구간별 평균 평점")
-    plt.xlabel("감성 점수 구간")
-    plt.ylabel("평균 평점")
-    plt.xticks(rotation=25, ha="right")
-    plt.tight_layout()
-    plt.show()
-    ```
+  df_clean["sent_bin"] = pd.qcut(df_clean["sentiment_score"], q=5, duplicates="drop")
+  sent_bin_summary = df_clean.groupby("sent_bin").agg(
+  n=("review_id", "count"),
+  rating_mean=("rating", "mean"),
+  sentiment_mean=("sentiment_score", "mean"),)
+
+  plt.figure(figsize=(9, 4))
+  sns.barplot(data=sent_bin_summary.reset_index(), x="sent_bin", y="rating_mean")
+  plt.title("감성 점수 구간별 평균 평점")
+  plt.xlabel("감성 점수 구간")
+  plt.ylabel("평균 평점")
+  plt.xticks(rotation=25, ha="right")
+  plt.tight_layout()
+  plt.show()
+  ```
 
 - 결과
 
-    ![속성 간 상관계수 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/correlation_matrix.png)
+  ![속성 간 상관계수 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/correlation_matrix.png)
 
-    - 상관계수 계산 결과, `sentiment_score`와 `rating`은 약 `0.73`의 강한 양의 상관관계를 보였습니다.
+  - 상관계수 계산 결과, `sentiment_score`와 `rating`은 약 `0.73`의 강한 양의 상관관계를 보였습니다.
 
-    ![감성 점수와 평점의 관계 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentiment_score_bin-avg_rating.png)
+  ![감성 점수와 평점의 관계 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentiment_score_bin-avg_rating.png)
 
-    - 감성 점수 분위수가 높아질수록 평균 평점이 단계적으로 상승하여, 감성 점수가 평점 및 추천 모델에 중요한 신호로 작용할 가능성이 높습니다.
+  - 감성 점수 분위수가 높아질수록 평균 평점이 단계적으로 상승하여, 감성 점수가 평점 및 추천 모델에 중요한 신호로 작용할 가능성이 높습니다.
 
 ### 4.2 리뷰 길이와 임베딩 유사도 영향 가능성
 
-리뷰 길이는 임베딩 입력 텍스트의 정보량과 직결될 수 있으므로, 길이 구간별 평점 및 감성 점수 평균을 확인하였습니다.
+리뷰 길이는 임베딩 입력 텍스트의 정보량과 직결될 수 있으므로, 길이 구간별 평점 및 감성 점수 평균을 확인했습니다.
 
 - 코드
-    ```python
-    df_clean["len_bin"] = pd.qcut(df_clean["review_length"], q=5, duplicates="drop")
 
-    len_bin_summary = df_clean.groupby("len_bin").agg(
-    n=("review_id", "count"),
-    rating_mean=("rating", "mean"),
-    sentiment_mean=("sentiment_score", "mean"),
-    len_mean=("review_length", "mean"),)
+  ```python
+  df_clean["len_bin"] = pd.qcut(df_clean["review_length"], q=5, duplicates="drop")
 
-    plt.figure(figsize=(9, 4))
-    sns.barplot(data=len_bin_summary.reset_index(), x="len_bin", y="rating_mean")
-    plt.title("리뷰 길이 구간별 평균 평점")
-    plt.xticks(rotation=25, ha="right")
-    plt.tight_layout()
-    plt.show()
-    ```
+  len_bin_summary = df_clean.groupby("len_bin").agg(
+  n=("review_id", "count"),
+  rating_mean=("rating", "mean"),
+  sentiment_mean=("sentiment_score", "mean"),
+  len_mean=("review_length", "mean"),)
+
+  plt.figure(figsize=(9, 4))
+  sns.barplot(data=len_bin_summary.reset_index(), x="len_bin", y="rating_mean")
+  plt.title("리뷰 길이 구간별 평균 평점")
+  plt.xticks(rotation=25, ha="right")
+  plt.tight_layout()
+  plt.show()
+  ```
+
 - 결과
 
-    ![리뷰 길이와 임베딩 유사도 영향 가능성 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length_bin-avg_rating.png)
-
+  ![리뷰 길이와 임베딩 유사도 영향 가능성 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length_bin-avg_rating.png)
 
 - 리뷰 길이 구간별 평균 평점은 큰 폭으로 단조 증가/감소하지 않아, 길이가 평점에 직접적 영향을 주는 변수로 보이진 않았습니다. 다만 임베딩 관점에서는 너무 짧은 텍스트가 정보 부족을 유발할 수 있고, 너무 긴 텍스트는 노이즈 증가/비용 증가를 야기할 수 있으므로 적정 길이 범위를 고려할 필요가 있습니다.
 
 ### 4.3 카테고리별 감성 점수 차이 분석
 
-카테고리별로 감성 점수 평균 차이가 존재하는지 검정하기 위해 ANOVA를 수행하였습니다.
+카테고리별로 감성 점수 평균 차이가 존재하는지 검정하기 위해 일원분산분석(ANOVA)과 평균 비교 시각화를 함께 수행했습니다.
 
 - 코드
-    ```python
-        groups = [g["sentiment_score"].dropna().values for _, g in df_clean.groupby("category")]
-        anova = stats.f_oneway(*groups) if len(groups) >= 2 else None
 
-        print("\n[ANOVA: Sentiment Score by category]")
-        print(anova)
-    ```
+  ```python
+    groups = [g["sentiment_score"].dropna().values for _, g in df_clean.groupby("category")]
+    anova = stats.f_oneway(*groups) if len(groups) >= 2 else None
+
+    print("\n[ANOVA: Sentiment Score by category]")
+    print(anova)
+
+    plt.figure(figsize=(8, 4))
+    order2 = cat_summary.sort_value("sentiment_mean", ascending=False).index
+    sns.barplot(data=df_clean, x="category",        y="sentiment_score", order=order2, estimator=np.mean, errorbar="ci")
+    plt.title("카테고리 별 감성 점수 평균")
+    plt.xlabel("카테고리")
+    plt.ylabel("감성 점수 평균")
+    plt.tight_layout()
+    plt.show()
+  ```
 
 - 결과
 
-    ![카테고리별 감성 점수 차이 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/category-avg_sentiment.png)
+  ![카테고리별 감성 점수 차이 anova 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/anova.png)
 
-- ANOVA 결과를 통해 카테고리별 감성 점수 평균 차이가 존재할 가능성을 확인하였으며, 추천 모델 설계 시 category 정보를 보조 변수로 활용할 여지가 있습니다.
+  - ANOVA 수행 결과, F 통계량은 약 0.247, p-value는 약 0.863으로 나타났습니다. 이는 유의수준 0.05 기준에서 카테고리별 감성 점수 평균 차이가 통계적으로 유의하지 않음을 의미합니다.
+
+  ![카테고리별 감성 점수 차이 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/category-avg_sentiment.png)
+
+  - 카테고리별 평균 감성 점수를 시각화한 결과에서도, 각 카테고리의 평균값은 유사한 수준을 보였으며 신뢰구간이 크게 겹쳐 뚜렷한 차이를 확인하기 어려웠습니다.
+
+- 종합하면, 감성 점수는 특정 카테고리에 의해 크게 구분되기보다는
+  리뷰 텍스트 자체의 내용적 특성을 더 강하게 반영하는 변수로 해석할 수 있습니다. 따라서 AI 임베딩 기반 분석 및 추천 시스템에서는 카테고리 정보보다 리뷰 문장의 의미 표현이 더 중요한 역할을 할 가능성이 있습니다.
 
 ---
 
 ## 5. 핵심 인사이트 요약
 
-1. 감성 점수는 평점과 강한 양의 상관관계를 가지며 AI 추천 시스템의 핵심 입력 변수로 활용 가능하다.
-2. 리뷰 길이는 평점과 직접적인 관계는 약하지만, 임베딩 품질에 영향을 줄 수 있는 요소로 고려할 필요가 있다.
-3. 카테고리별 감성 분포 차이를 반영한 추천 전략이 효과적일 수 있다.
+본 EDA 분석을 통해 AI 임베딩 기반 추천 시스템 구축에 활용할 수 있는 주요 인사이트는 다음과 같습니다.
+
+1. **감성 점수는 평점과 강한 양의 상관관계를 보인다.**  
+   상관계수 분석 결과, `sentiment_score`와 `rating` 간 상관계수는 약 0.73으로 나타났으며,  
+   감성 점수 분위수가 높아질수록 평균 평점이 단계적으로 상승하는 경향이 확인되었습다.  
+   이는 감성 점수가 사용자 만족도를 잘 반영하는 핵심 변수임을 시사합니다.
+
+2. **리뷰 길이는 평점과 직접적인 관계는 약하지만, 임베딩 품질에는 영향을 줄 수 있다.**  
+   리뷰 길이 구간별 평균 평점에는 뚜렷한 단조 증가·감소 패턴이 나타나지 않았으나,  
+   너무 짧은 리뷰는 정보 부족을, 너무 긴 리뷰는 노이즈 및 연산 비용 증가를 유발할 수 있습니다.  
+   따라서 임베딩 생성 시 적정 리뷰 길이 범위를 고려하는 전략이 필요합니다.
+
+3. **카테고리별 감성 점수 평균 차이는 통계적으로 유의하지 않다.**  
+   ANOVA 분석 결과(p-value = 0.863), 카테고리 간 감성 점수 평균 차이는 유의하지 않았으며,  
+   시각화 결과에서도 각 카테고리의 평균 및 신뢰구간이 크게 겹쳤습니다.  
+   이는 감성 점수가 상품 카테고리보다는 리뷰 텍스트 자체의 내용에 더 크게 의존함을 의미합니다.
 
 ---
 
 ## 6. 결론
 
-본 EDA를 통해 리뷰 데이터는 전반적으로 품질이 양호하며, 감성 점수 중심의 AI 임베딩 분석이 충분히 의미 있는 결과를 도출할 수 있음을 확인하였다.  
-향후 본 결과를 기반으로 LLM 임베딩 생성 및 유사도 기반 추천 모델을 확장할 수 있다.
+본 분석에서는 고객 리뷰 데이터를 AI 임베딩 및 유사도 분석에 활용하기 위한 사전 단계로서 Pandas와 Seaborn을 활용한 EDA를 수행했습니다.
+
+데이터 전처리 과정에서 결측치 처리 및 파생 변수 검증을 통해 데이터의 신뢰성을 확보했으며, 분포 시각화와 이상치 탐지를 통해 전반적으로 안정적인 데이터 특성을 확인했습니다.
+
+분석 결과, 감성 점수는 평점과 강한 연관성을 가지는 핵심 변수로 확인되었으며,  
+카테고리보다는 리뷰 텍스트의 의미적 정보가 감성 및 평점에 더 큰 영향을 미치는 것으로 해석됩니다.  
+또한 리뷰 길이는 평점과 직접적인 관계는 약하지만, 임베딩 품질 관점에서 중요한 고려 요소임을 확인했습니다.
+
+이러한 결과를 바탕으로, 향후 AI 임베딩 기반 추천 시스템에서는  
+카테고리 정보보다는 리뷰 텍스트의 의미 표현과 감성 정보를 중심으로 한 모델 설계가 효과적일 것으로 판단됩니다.  
+본 EDA 결과는 이후 LLM 임베딩 생성, 유사도 계산 및 추천 로직 설계의 기초 자료로 활용될 수 있습니다.
