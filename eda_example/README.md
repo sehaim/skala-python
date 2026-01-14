@@ -279,11 +279,12 @@ AI 임베딩 및 유사도 분석 전,
 
 ---
 
-### 3.4 텍스트 길이와 평점 관계 분석 (boxplot)
+### 3.4 리뷰 길이와 평점 관계 분석 (boxplot)
 
 리뷰 길이(review_length)가 평점과 관계가 있는지 확인하기 위해 분포 기반으로 비교하였습니다.
 
-![텍스트 길이와 평점 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length-avg_rating.png)
+![리뷰 길이와 평점 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length-avg_rating.png)
+
 
 - 리뷰 길이와 평점 간 직접적인 관계는 뚜렷하지 않음
 
@@ -307,18 +308,26 @@ AI 임베딩 및 유사도 분석 전,
     n=("review_id", "count"),
     rating_mean=("rating", "mean"),
     sentiment_mean=("sentiment_score", "mean"),)
-    print("\n[Sentiment Score bin summary]")
-    print(sent_bin_summary)
+
+    plt.figure(figsize=(9, 4))
+    sns.barplot(data=sent_bin_summary.reset_index(), x="sent_bin", y="rating_mean")
+    plt.title("감성 점수 구간별 평균 평점")
+    plt.xlabel("감성 점수 구간")
+    plt.ylabel("평균 평점")
+    plt.xticks(rotation=25, ha="right")
+    plt.tight_layout()
+    plt.show()
     ```
 
 - 결과
 
     ![속성 간 상관계수 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/correlation_matrix.png)
 
-    ![감성 점수와 평점의 관계 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentiment_score_bin.png)
+    - 상관계수 계산 결과, `sentiment_score`와 `rating`은 약 `0.73`의 강한 양의 상관관계를 보였습니다.
 
-- 상관계수 결과, `sentiment_score`와 `rating`은 약 `0.73`의 강한 양의 상관관계를 보였습니다.
-- 감성 점수 분위수가 높아질수록 평균 평점이 단계적으로 상승하여, 감성 점수가 평점 및 추천 모델에 중요한 신호로 작용할 가능성이 높습니다.
+    ![감성 점수와 평점의 관계 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentiment_score_bin-avg_rating.png)
+
+    - 감성 점수 분위수가 높아질수록 평균 평점이 단계적으로 상승하여, 감성 점수가 평점 및 추천 모델에 중요한 신호로 작용할 가능성이 높습니다.
 
 ### 4.2 리뷰 길이와 임베딩 유사도 영향 가능성
 
@@ -334,12 +343,17 @@ AI 임베딩 및 유사도 분석 전,
     sentiment_mean=("sentiment_score", "mean"),
     len_mean=("review_length", "mean"),)
 
-    print("\n[Review Length bin summary]")
-    print(len_bin_summary)
+    plt.figure(figsize=(9, 4))
+    sns.barplot(data=len_bin_summary.reset_index(), x="len_bin", y="rating_mean")
+    plt.title("리뷰 길이 구간별 평균 평점")
+    plt.xticks(rotation=25, ha="right")
+    plt.tight_layout()
+    plt.show()
     ```
 - 결과
 
-    ![리뷰 길이와 임베딩 유사도 영향 가능성 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length-bin.png)
+    ![리뷰 길이와 임베딩 유사도 영향 가능성 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length_bin-avg_rating.png)
+
 
 - 리뷰 길이 구간별 평균 평점은 큰 폭으로 단조 증가/감소하지 않아, 길이가 평점에 직접적 영향을 주는 변수로 보이진 않았습니다. 다만 임베딩 관점에서는 너무 짧은 텍스트가 정보 부족을 유발할 수 있고, 너무 긴 텍스트는 노이즈 증가/비용 증가를 야기할 수 있으므로 적정 길이 범위를 고려할 필요가 있습니다.
 
@@ -358,7 +372,7 @@ AI 임베딩 및 유사도 분석 전,
 
 - 결과
 
-    ![카테고리별 감성 점수 차이 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/text.png)
+    ![카테고리별 감성 점수 차이 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/category-avg_sentiment.png)
 
 - ANOVA 결과를 통해 카테고리별 감성 점수 평균 차이가 존재할 가능성을 확인하였으며, 추천 모델 설계 시 category 정보를 보조 변수로 활용할 여지가 있습니다.
 

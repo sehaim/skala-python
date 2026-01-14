@@ -2,28 +2,10 @@
 # 작성자 : 임세하
 # 작성목적 : Pandas 와 Seaborn을 활용한 데이터 분석 실습
 # 기능 : Pandas로 AI 임베딩 전처리를 위한 통계 요약 및 이상치 탐지 / Seaborn으로 변수 간 관계 시각화
-# 실습 포인트 :
-# 1단계
-# - 데이터 전처리
-#  . reviews.csv 파일 호출
-#  . 결측치 확인/처리
-#  . 분포 시각화 및 이상치 탐지
-# 2단계
-# - 기술 통계 및 시각화
-#  . review_length 등 기술 통계 요약
-#  . category 별 평균 평점 시각화 (barplot)
-#  . 평점과 감성 점수 관계 시각화
-#  . 텍스트 길이와 평점의 관계 (boxplot or violinplot)
-# 3단계
-# - AI 분석을 위한 인사이트 도출
-#  . sentiment_score가 높을 수록 평점이 높나?
-#  . Review_length가 AI 임베딩 유사도에 영향을 줄 수 있나?
-#  . category 별 감성 점수 평균 차이는 존재?
-#  . 위의 질문에 대한 그래프 기반 해석 및 3줄 요약 Insight 작성
-# 4단계
-# - Report 작성
-#  . 결과 리포트 작성 시 제목/목차/시각화 포함
-#  . 분석 코드와 인사이트를 정리
+# 실습 포인트 : AI 분석을 위한 인사이트 도출
+#           - sentiment_score가 높을 수록 평점이 높은가?
+#           - Review_length가 AI 임베딩 유사도에 영향을 줄 수 있는가?
+#           - category 별 감성 점수 평균 차이는 존재하는가?
 # 작성일 : 2026-01-14
 # ------------------------------------------------------------
 
@@ -189,11 +171,9 @@ cat_summary = (
     )
     .sort_values("n", ascending=False)
 )
-print("\n[Category summary]")
-print(cat_summary)
 
 # =========================
-# 2-1) category 별 평균 평점 시각화 (barplot)
+# 2-1) category 별 평균 평점 시각화
 # =========================
 plt.figure(figsize=(8, 4))
 order = cat_summary.sort_values("rating_mean", ascending=False).index
@@ -206,7 +186,6 @@ plt.show()
 
 # =========================
 # 2-2) 평점과 감성 점수 관계 시각화
-#    - scatter + regression line
 # =========================
 plt.figure(figsize=(7, 4))
 sns.violinplot(data=df_clean, x="rating", y="sentiment_score", inner="quartile")
@@ -217,29 +196,21 @@ plt.tight_layout()
 plt.show()
 
 # =========================
-# 2-3) 텍스트 길이와 평점 관계 (boxplot or violinplot)
+# 2-3) 리뷰 길이와 평점 관계 시각화
 # =========================
 plt.figure(figsize=(7, 4))
 sns.boxplot(data=df_clean, x="rating", y="review_length")
-plt.title("텍스트 길이와 평점 관계(boxplot)")
+plt.title("리뷰 길이와 평점 관계(boxplot)")
 plt.xlabel("평점(rating)")
-plt.ylabel("텍스트 길이(review_length)")
-plt.tight_layout()
-plt.show()
-
-plt.figure(figsize=(7, 4))
-sns.violinplot(data=df_clean, x="rating", y="review_length", inner="quartile")
-plt.title("텍스트 길이와 평점 관계(violinplot)")
-plt.xlabel("평점(rating)")
-plt.ylabel("텍스트 길이(review_length)")
+plt.ylabel("리뷰 길이(review_length)")
 plt.tight_layout()
 plt.show()
 
 # =========================
 # 3) AI 분석을 위한 인사이트용 정량 체크
-#    - Q1 sentiment_score가 높을 수록 rating이 높은가? (상관/회귀, 그룹 평균)
-#    - Q2 review_length가 임베딩 유사도에 영향을 미치는가? (길이 proxy로 분산/패턴 확인)
-#    - Q3 category 별 sentiment 평균 차이 (ANOVA)
+#    - Q1 sentiment_score가 높을 수록 rating이 높은가?
+#    - Q2 review_length가 임베딩 유사도에 영향을 미치는가?
+#    - Q3 category 별 sentiment 평균 차이
 # =========================
 
 # Q1) 상관계수
@@ -254,17 +225,17 @@ sent_bin_summary = df_clean.groupby("sent_bin").agg(
     rating_mean=("rating", "mean"),
     sentiment_mean=("sentiment_score", "mean"),
 )
-print("\n[Sentiment Score bin summary]")
-print(sent_bin_summary)
 
 plt.figure(figsize=(9, 4))
 sns.barplot(data=sent_bin_summary.reset_index(), x="sent_bin", y="rating_mean")
-plt.title("Avg Rating by Sentiment Quantile Bin")
+plt.title("감성 점수 구간별 평균 평점")
+plt.xlabel("감성 점수 구간")
+plt.ylabel("평균 평점")
 plt.xticks(rotation=25, ha="right")
 plt.tight_layout()
 plt.show()
 
-# Q2) 길이 구간별 rating/sentiment 요약 (임베딩 품질/유사도 영향 가설의 근거로 활용)
+# Q2) 리뷰 길이 구간별 rating/sentiment 요약
 df_clean["len_bin"] = pd.qcut(df_clean["review_length"], q=5, duplicates="drop")
 len_bin_summary = df_clean.groupby("len_bin").agg(
     n=("review_id", "count"),
@@ -272,12 +243,12 @@ len_bin_summary = df_clean.groupby("len_bin").agg(
     sentiment_mean=("sentiment_score", "mean"),
     len_mean=("review_length", "mean"),
 )
-print("\n[Review Length bin summary]")
-print(len_bin_summary)
 
 plt.figure(figsize=(9, 4))
-sns.barplot(data=len_bin_summary.reset_index(), x="len_bin", y="rating_mean", marker="o")
-plt.title("Avg Rating by Review Length Quantile Bin")
+sns.barplot(data=len_bin_summary.reset_index(), x="len_bin", y="rating_mean")
+plt.title("리뷰 길이 구간별 평균 평점")
+plt.xlabel("리뷰 길이 구간")
+plt.ylabel("평균 평점")
 plt.xticks(rotation=25, ha="right")
 plt.tight_layout()
 plt.show()
@@ -291,9 +262,9 @@ print(anova)
 plt.figure(figsize=(8, 4))
 order2 = cat_summary.sort_values("sentiment_mean", ascending=False).index
 sns.barplot(data=df_clean, x="category", y="sentiment_score", order=order2, estimator=np.mean, errorbar="ci")
-plt.title("Average Sentiment Score by Category")
-plt.xlabel("category")
-plt.ylabel("avg sentiment_score")
+plt.title("카테고리 별 감성 점수 평균")
+plt.xlabel("카테고리")
+plt.ylabel("감성 점수 평균")
 plt.tight_layout()
 plt.show()
 
