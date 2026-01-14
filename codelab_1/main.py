@@ -14,6 +14,7 @@ from __future__ import annotations
 import csv
 import os
 import re
+import sys
 import time
 import multiprocessing as mp
 from dataclasses import dataclass
@@ -33,6 +34,19 @@ class JobConfig:
     processes: int  # 0이면 단일 처리
     chunk_size: int
     max_rows: Optional[int] = None
+    
+# ============================================================
+# 0. 입력 파일 검증 (CSV인지 확인)
+# ============================================================
+def ensure_csv_or_exit(path: str) -> None:
+    if not os.path.exists(path):
+        print(f"[ERROR] 입력 파일을 찾을 수 없습니다: {path}")
+        sys.exit(1)
+
+    if not path.lower().endswith(".csv"):
+        print(f"[ERROR] 입력 파일이 CSV가 아닙니다: {path}")
+        print("        .csv 파일을 지정한 뒤 다시 실행해주세요.")
+        sys.exit(1)
 
 
 # ============================================================
@@ -49,11 +63,10 @@ PHONE_RE = re.compile(
 MULTI_SPACE_RE = re.compile(r"\s+")
 
 NORMALIZE_MAP = {
-    "갠춘": "괜찮음",
-    "존맛": "아주 맛있음",
-    "맛잇": "맛있",
-    "별로임": "별로",
-    "ㅈㅁㅌ": "아주 맛있음",
+    "비하": "표준",
+    "혐오": "표준",
+    "욕설": "표준표현",
+    "금칙어": "표준표현",
 }
 
 
@@ -191,6 +204,9 @@ def run_job(cfg: JobConfig) -> None:
 
 
 if __name__ == "__main__":
+    # 실행 전 CSV 파일 검증
+    ensure_csv_or_exit(CSV_PATH)
+    
     chunk_sizes = [1_000, 5_000, 20_000]
     procs = os.cpu_count() or 4
 
