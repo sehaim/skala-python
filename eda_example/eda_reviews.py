@@ -53,7 +53,6 @@ df = pd.read_csv(DATA_PATH)
 
 print("Shape:", df.shape)
 print(df.head(3))
-print("\nColumns:", df.columns.tolist())
 
 # =========================
 # 1-1) 결측치 / 중복치 확인
@@ -80,10 +79,7 @@ print(df["sentiment_score"].describe())
 
 # =========================
 # 1-3) 전처리(결측치 처리 + 파생변수 보강)
-#    - 임베딩 유사도 분석 전: review_text는 필수이므로 결측은 제거 권장
-#    - sentiment_score는 (1) 제거 or (2) 대체 전략 중 선택
 # =========================
-
 df_clean = df.copy()
 
 # (A) review_text 결측 제거 (임베딩 생성 불가)
@@ -92,7 +88,6 @@ df_clean = df_clean.dropna(subset=["review_text"]).reset_index(drop=True)
 print(f"\nDropped rows with missing review_text: {before - len(df_clean)}")
 
 # (B) sentiment_score 결측 대체 (카테고리 중앙값으로)
-#     - 대체가 싫다면: df_clean = df_clean.dropna(subset=["sentiment_score"])
 if df_clean["sentiment_score"].isna().any():
     df_clean["sentiment_score"] = (
         df_clean.groupby("category")["sentiment_score"]
@@ -114,9 +109,8 @@ print("\n[words_diff summary]")
 print(df_clean["words_diff"].describe())
 
 # =========================
-# 1-4) 분포 시각화 + 이상치 탐지 준비
+# 1-4)이상치 탐지
 # =========================
-
 NUM_COLS = ["review_length", "num_words", "sentiment_score", "rating"]
 
 def iqr_outliers(s: pd.Series, k: float = 1.5) -> pd.Index:
@@ -156,18 +150,13 @@ print(outlier_report_df)
 
 print("\nTotal unique outlier rows (union across features):", len(outlier_rows))
 
-# 필요 시: 이상치 행만 보기
-df_outliers = df_clean.loc[sorted(list(outlier_rows))].copy()
-print("\n[df_outliers sample]")
-print(df_outliers.head(5))
-
 # =========================
 # 1-5) 분포 시각화
 # =========================
 for col in ["review_length", "num_words", "sentiment_score"]:
     plt.figure(figsize=(8, 4))
     sns.histplot(df_clean[col], kde=True)
-    plt.title(f"Distribution: {col}")
+    plt.title(f"분포 시각화: {col}")
     plt.tight_layout()
     plt.show()
 
@@ -178,7 +167,7 @@ for col in ["review_length", "num_words", "sentiment_score"]:
     plt.show()
 
 # =========================
-# 2) 기술 통계 요약
+# 2. 기술 통계 요약
 # =========================
 desc = df_clean[NUM_COLS].describe().T
 desc["missing"] = df_clean[NUM_COLS].isna().sum()
@@ -247,7 +236,7 @@ plt.tight_layout()
 plt.show()
 
 # =========================
-# 3) AI 분석을 위한 인사이트용 정량 체크(리포트 문장 작성은 X)
+# 3) AI 분석을 위한 인사이트용 정량 체크
 #    - Q1 sentiment_score가 높을 수록 rating이 높나? (상관/회귀, 그룹 평균)
 #    - Q2 review_length가 임베딩 유사도에 영향을? (길이 proxy로 분산/패턴 확인)
 #    - Q3 category 별 sentiment 평균 차이? (ANOVA)
@@ -287,7 +276,7 @@ print("\n[Length bin summary]")
 print(len_bin_summary)
 
 plt.figure(figsize=(9, 4))
-sns.lineplot(data=len_bin_summary.reset_index(), x="len_bin", y="rating_mean", marker="o")
+sns.barplot(data=len_bin_summary.reset_index(), x="len_bin", y="rating_mean", marker="o")
 plt.title("Avg Rating by Review Length Quantile Bin")
 plt.xticks(rotation=25, ha="right")
 plt.tight_layout()
