@@ -50,3 +50,17 @@ Thumbs.db
 # Jupyter 
 ############################
 .ipynb_checkpoints/
+
+############################
+# Data files
+############################
+*.csv
+*.tsv
+*.parquet
+
+############################
+# mypycache
+############################
+.mypy_cache/
+.dmypy.json
+dmypy.json
