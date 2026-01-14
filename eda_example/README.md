@@ -59,7 +59,7 @@
   ```
 - 출력 결과
 
-  ![데이터 로드 출력 결과](<(https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/data_load.png)>)
+  ![데이터 로드 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/data_load.png)
 
 - 데이터 구조 및 컬럼 타입을 확인하여 분석 가능 여부를 점검하였고, 이상 없음을 확인했습니다.
 
@@ -80,9 +80,9 @@
     df_clean["sentiment_score"] = (df_clean.groupby("category")["sentiment_score"].transform(lambda s: s.fillna(s.median())))
     ```
 
-- 결측치 확인 결과
+- 출력 결과
 
-  ![데이터 결측치 확인 출력 결과](<(https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/missing_values.png)>)
+  ![데이터 결측치 확인 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/missing_values.png)
 
 - 결측치 처리 전략은 다음과 같습니다.
     - `review_text` : AI 임베딩 생성이 불가능하므로 해당 행 제거
@@ -118,7 +118,7 @@ AI 임베딩 및 유사도 분석 전,
 
     - 출력 결과
         
-        ![데이터 검증 출력 결과](<(https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/data_check.png)>)
+        ![데이터 검증 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/data_check.png)
 
     - 기존 컬럼과 재계산된 값 간의 차이를 비교한 결과, 데이터 전반에서 큰 불일치는 관찰되지 않았으며, 제공된 `review_length`, `num_words` 컬럼은 신뢰 가능한 것으로 판단하였습니다.
 
@@ -127,12 +127,36 @@ AI 임베딩 및 유사도 분석 전,
 
     - 코드
         ```python
-        
-        
-        
-        
-        
+        for col in ["review_length", "rating", "sentiment_score"]:
+        plt.figure(figsize=(8, 4))
+        sns.histplot(df_clean[col], kde=True)
+        plt.title(f"분포 시각화(히스토그램): {col}")
+        plt.tight_layout()
+        plt.show()
+
+        plt.figure(figsize=(8, 2.8))
+        sns.boxplot(x=df_clean[col])
+        plt.title(f"분포 시각화(boxplot): {col}")
+        plt.tight_layout()
+        plt.show()
         ```
+
+    - 출력 결과
+        - `review_length`
+
+            ![review_length 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length_histogram.png)
+            ![review_length boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length_boxplot.png)
+
+        - `rating`
+
+            ![rating 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating_histogram.png)
+            ![rating boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating_boxplot.png)
+
+        - `sentimentic_score`
+
+            ![sentimentic_score 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentimentic_score_histogram.png)
+            ![rating boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentimentic_score_boxplot.png)
+
 
 - #### 이상치 탐지 (IQR / Z-score)
     분포 시각화 이후, IQR 및 Z-score 기준을 활용하여 이상치를 정량적으로 탐지하였습니다.
@@ -177,7 +201,7 @@ AI 임베딩 및 유사도 분석 전,
         ```
     - 출력 결과
 
-        ![이상치 탐지 출력 결과](<(https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/IQR_ZScore.png)>)
+        ![이상치 탐지 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/IQR_ZScore.png)
     
     - IQR 및 Z-score 기준 모두에서 이상치로 판단되는 데이터는 발견되지 않았고, 데이터 전반이 정상 범위 내에 분포하고 있음을 확인하였습니다. 따라서 이상치 제거 없이 전체 데이터를 분석 대상으로 유지하였습니다.
 

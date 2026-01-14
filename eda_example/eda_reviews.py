@@ -153,16 +153,16 @@ print("\nTotal unique outlier rows (union across features):", len(outlier_rows))
 # =========================
 # 1-5) 분포 시각화
 # =========================
-for col in ["review_length", "num_words", "sentiment_score"]:
+for col in ["review_length", "rating", "sentiment_score"]:
     plt.figure(figsize=(8, 4))
     sns.histplot(df_clean[col], kde=True)
-    plt.title(f"분포 시각화: {col}")
+    plt.title(f"분포 시각화(히스토그램): {col}")
     plt.tight_layout()
     plt.show()
 
     plt.figure(figsize=(8, 2.8))
     sns.boxplot(x=df_clean[col])
-    plt.title(f"Boxplot: {col}")
+    plt.title(f"분포 시각화(boxplot): {col}")
     plt.tight_layout()
     plt.show()
 
