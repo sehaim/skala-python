@@ -263,19 +263,20 @@ AI 임베딩 및 유사도 분석 전,
 카테고리별 평점 평균을 비교하여 상품 유형에 따른 평점 차이를 확인했습니다.
 
 - 코드
-    ```python
-    plt.figure(figsize=(8, 4))
-    order = cat_summary.sort_values("rating_mean", ascending=False).index
-    sns.barplot(data=df_clean, x="category", y="rating", order=order, estimator=np.mean, errorbar="ci")
-    plt.title("카테고리 별 평균 평점")
-    plt.xlabel("카테고리")
-    plt.ylabel("평균 평점")
-    plt.tight_layout()
-    plt.show()
-    ```
+
+  ```python
+  plt.figure(figsize=(8, 4))
+  order = cat_summary.sort_values("rating_mean", ascending=False).index
+  sns.barplot(data=df_clean, x="category", y="rating", order=order, estimator=np.mean, errorbar="ci")
+  plt.title("카테고리 별 평균 평점")
+  plt.xlabel("카테고리")
+  plt.ylabel("평균 평점")
+  plt.tight_layout()
+  plt.show()
+  ```
 
 - 결과
-    ![카테고리 별 평균 평점](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/category-avg_rating.png)
+  ![카테고리 별 평균 평점](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/category-avg_rating.png)
 
 - `home`, `fashion` 카테고리가 상대적으로 높은 평균 평점을 보입니다.
 - 카테고리 간 평균 평점 차이는 크지 않으나 순위 차이는 존재합니다.
@@ -287,18 +288,19 @@ AI 임베딩 및 유사도 분석 전,
 평점(`rating`)과 감성 점수(`sentiment_score`)의 관계를 시각화하여, 감성 점수가 평점에 영향을 주는지 확인했습니다.
 
 - 코드
-    ```python
-    plt.figure(figsize=(7, 4))
-    sns.violinplot(data=df_clean, x="rating", y="sentiment_score", inner="quartile")
-    plt.title("평점과 감성 점수 관계")
-    plt.xlabel("감성 점수(sentiment_score)")
-    plt.ylabel("평점(rating)")
-    plt.tight_layout()
-    plt.show()
-    ```
+
+  ```python
+  plt.figure(figsize=(7, 4))
+  sns.violinplot(data=df_clean, x="rating", y="sentiment_score", inner="quartile")
+  plt.title("평점과 감성 점수 관계")
+  plt.xlabel("감성 점수(sentiment_score)")
+  plt.ylabel("평점(rating)")
+  plt.tight_layout()
+  plt.show()
+  ```
 
 - 결과
-    ![평점과 감성 점수 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating-sentiment_score.png)
+  ![평점과 감성 점수 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating-sentiment_score.png)
 
 - 감성 점수가 높아질수록 평점이 함께 증가하는 경향을 보입니다.
 
@@ -309,19 +311,20 @@ AI 임베딩 및 유사도 분석 전,
 리뷰 길이(review_length)가 평점과 관계가 있는지 확인하기 위해 분포 기반으로 비교했습니다.
 
 - 코드
-    ```python
-    plt.figure(figsize=(7, 4))
-    sns.boxplot(data=df_clean, x="rating", y="review_length")
-    plt.title("리뷰 길이와 평점 관계(boxplot)")
-    plt.xlabel("평점(rating)")
-    plt.ylabel("리뷰 길이(review_length)")
-    plt.tight_layout()
-    plt.show()
-    ```
+
+  ```python
+  plt.figure(figsize=(7, 4))
+  sns.boxplot(data=df_clean, x="rating", y="review_length")
+  plt.title("리뷰 길이와 평점 관계(boxplot)")
+  plt.xlabel("평점(rating)")
+  plt.ylabel("리뷰 길이(review_length)")
+  plt.tight_layout()
+  plt.show()
+  ```
 
 - 결과
 
-    ![리뷰 길이와 평점 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length-avg_rating.png)
+  ![리뷰 길이와 평점 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length-avg_rating.png)
 
 - 리뷰 길이와 평점 간 직접적인 관계는 뚜렷하지 않습니다.
 

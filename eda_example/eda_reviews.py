@@ -19,7 +19,6 @@ from scipy import stats
 # =========================
 # 0. 기본 설정
 # =========================
-
 pd.set_option("display.max_columns", 50)
 pd.set_option("display.width", 120)
 sns.set_theme(style="whitegrid")
@@ -71,10 +70,9 @@ print(f"\nDropped rows with missing review_text: {before - len(df_clean)}")
 
 # (B) sentiment_score 결측 대체 (카테고리 중앙값으로)
 if df_clean["sentiment_score"].isna().any():
-    df_clean["sentiment_score"] = (
-        df_clean.groupby("category")["sentiment_score"]
-        .transform(lambda s: s.fillna(s.median()))
-    )
+    df_clean["sentiment_score"] = df_clean.groupby("category")[
+        "sentiment_score"
+    ].transform(lambda s: s.fillna(s.median()))
 
 # (C) review_length가 이미 존재하지만, 안전하게 재계산/검증용 컬럼 추가
 df_clean["review_length_calc"] = df_clean["review_text"].astype(str).str.len()
@@ -95,6 +93,7 @@ print(df_clean["words_diff"].describe())
 # =========================
 NUM_COLS = ["review_length", "num_words", "sentiment_score", "rating"]
 
+
 def iqr_outliers(s: pd.Series, k: float = 1.5) -> pd.Index:
     """IQR 기반 이상치 인덱스 반환"""
     s = s.dropna()
@@ -103,11 +102,13 @@ def iqr_outliers(s: pd.Series, k: float = 1.5) -> pd.Index:
     lower, upper = q1 - k * iqr, q3 + k * iqr
     return s[(s < lower) | (s > upper)].index
 
+
 def zscore_outliers(s: pd.Series, z: float = 3.0) -> pd.Index:
     """Z-score 기반 이상치 인덱스 반환"""
     s = s.dropna()
     zs = np.abs(stats.zscore(s))
     return s[zs > z].index
+
 
 # 이상치 요약 테이블
 outlier_rows = set()
@@ -118,15 +119,19 @@ for col in ["review_length", "num_words", "sentiment_score"]:
     idx_z = set(zscore_outliers(df_clean[col], z=3.0).tolist())
     union = idx_iqr.union(idx_z)
     outlier_rows |= union
-    outlier_report.append({
-        "feature": col,
-        "iqr_outliers": len(idx_iqr),
-        "zscore_outliers": len(idx_z),
-        "union_outliers": len(union),
-        "union_ratio": len(union) / len(df_clean)
-    })
+    outlier_report.append(
+        {
+            "feature": col,
+            "iqr_outliers": len(idx_iqr),
+            "zscore_outliers": len(idx_z),
+            "union_outliers": len(union),
+            "union_ratio": len(union) / len(df_clean),
+        }
+    )
 
-outlier_report_df = pd.DataFrame(outlier_report).sort_values("union_outliers", ascending=False)
+outlier_report_df = pd.DataFrame(outlier_report).sort_values(
+    "union_outliers", ascending=False
+)
 print("\n[Outlier report]")
 print(outlier_report_df)
 
@@ -177,7 +182,14 @@ cat_summary = (
 # =========================
 plt.figure(figsize=(8, 4))
 order = cat_summary.sort_values("rating_mean", ascending=False).index
-sns.barplot(data=df_clean, x="category", y="rating", order=order, estimator=np.mean, errorbar="ci")
+sns.barplot(
+    data=df_clean,
+    x="category",
+    y="rating",
+    order=order,
+    estimator=np.mean,
+    errorbar="ci",
+)
 plt.title("카테고리 별 평균 평점")
 plt.xlabel("카테고리")
 plt.ylabel("평균 평점")
@@ -210,7 +222,9 @@ plt.show()
 # 3) AI 분석을 위한 인사이트용 정량 체크
 # =========================
 # Q1) 상관계수
-corr = df_clean[["sentiment_score", "rating", "review_length", "num_words"]].corr(numeric_only=True)
+corr = df_clean[["sentiment_score", "rating", "review_length", "num_words"]].corr(
+    numeric_only=True
+)
 print("\n[Correlation matrix]")
 print(corr)
 
@@ -257,7 +271,14 @@ print(anova)
 
 plt.figure(figsize=(8, 4))
 order2 = cat_summary.sort_values("sentiment_mean", ascending=False).index
-sns.barplot(data=df_clean, x="category", y="sentiment_score", order=order2, estimator=np.mean, errorbar="ci")
+sns.barplot(
+    data=df_clean,
+    x="category",
+    y="sentiment_score",
+    order=order2,
+    estimator=np.mean,
+    errorbar="ci",
+)
 plt.title("카테고리 별 감성 점수 평균")
 plt.xlabel("카테고리")
 plt.ylabel("감성 점수 평균")
