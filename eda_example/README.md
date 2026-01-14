@@ -57,7 +57,7 @@
   print(df.head(3))
   print("\nColumns:", df.columns.tolist())
   ```
-- 출력 결과
+- 결과
 
   ![데이터 로드 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/data_load.png)
 
@@ -78,15 +78,16 @@
 
     # sentiment_score 결측 대체
     df_clean["sentiment_score"] = (df_clean.groupby("category")["sentiment_score"].transform(lambda s: s.fillna(s.median())))
-    ```
+  ```
 
-- 출력 결과
+- 결과
 
   ![데이터 결측치 확인 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/missing_values.png)
 
 - 결측치 처리 전략은 다음과 같습니다.
-    - `review_text` : AI 임베딩 생성이 불가능하므로 해당 행 제거
-    - `sentiment_score` : 동일 카테고리 내 중앙값으로 대체
+
+  - `review_text` : AI 임베딩 생성이 불가능하므로 해당 행 제거
+  - `sentiment_score` : 동일 카테고리 내 중앙값으로 대체
 
 - 결측치 처리 후 분석 대상 데이터는 **995건**입니다.
 
@@ -98,112 +99,133 @@ AI 임베딩 및 유사도 분석 전,
 
 - #### 파생 변수 생성 및 데이터 검증
 
-    기존에 제공된 텍스트 길이 관련 컬럼의 신뢰성을 검증하기 위해, 리뷰 텍스트(`review_text`)를 기반으로 파생 변수를 생성하였습니다.
+  기존에 제공된 텍스트 길이 관련 컬럼의 신뢰성을 검증하기 위해, 리뷰 텍스트(`review_text`)를 기반으로 파생 변수를 생성하였습니다.
 
-    - 코드
-        ```python
-        f_clean["review_length_calc"] = df_clean["review_text"].astype(str).str.len()
+  - 코드
 
-        # 길이 불일치 체크
-        df_clean["length_diff"] = df_clean["review_length_calc"] - df_clean["review_length"]
-        print("\n[length_diff summary]")
-        print(df_clean["length_diff"].describe())
+    ```python
+    f_clean["review_length_calc"] = df_clean["review_text"].astype(str).str.len()
 
-        # num_words 검증용 재계산 컬럼 추가
-        df_clean["num_words_calc"] = df_clean["review_text"].astype(str).str.split().str.len()
-        df_clean["words_diff"] = df_clean["num_words_calc"] - df_clean["num_words"]
-        print("\n[words_diff summary]")
-        print(df_clean["words_diff"].describe())
-        ```
+    # 길이 불일치 체크
+    df_clean["length_diff"] = df_clean["review_length_calc"] - df_clean["review_length"]
+    print("\n[length_diff summary]")
+    print(df_clean["length_diff"].describe())
 
-    - 출력 결과
-        
-        ![데이터 검증 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/data_check.png)
+    # num_words 검증용 재계산 컬럼 추가
+    df_clean["num_words_calc"] = df_clean["review_text"].astype(str).str.split().str.len()
+    df_clean["words_diff"] = df_clean["num_words_calc"] - df_clean["num_words"]
+    print("\n[words_diff summary]")
+    print(df_clean["words_diff"].describe())
+    ```
 
-    - 기존 컬럼과 재계산된 값 간의 차이를 비교한 결과, 데이터 전반에서 큰 불일치는 관찰되지 않았으며, 제공된 `review_length`, `num_words` 컬럼은 신뢰 가능한 것으로 판단하였습니다.
+  - 결과
+
+    ![데이터 검증 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/data_check.png)
+
+  - 기존 컬럼과 재계산된 값 간의 차이를 비교한 결과, 데이터 전반에서 큰 불일치는 관찰되지 않았으며, 제공된 `review_length`, `num_words` 컬럼은 신뢰 가능한 것으로 판단하였습니다.
 
 - #### 분포 시각화
-    주요 수치형 변수의 분포를 확인하기 위해 히스토그램과 박스플롯을 활용하였습니다.
 
-    - 코드
-        ```python
-        for col in ["review_length", "rating", "sentiment_score"]:
-        plt.figure(figsize=(8, 4))
-        sns.histplot(df_clean[col], kde=True)
-        plt.title(f"분포 시각화(히스토그램): {col}")
-        plt.tight_layout()
-        plt.show()
+  주요 수치형 변수의 분포를 확인하기 위해 히스토그램과 박스플롯을 활용하였습니다.
 
-        plt.figure(figsize=(8, 2.8))
-        sns.boxplot(x=df_clean[col])
-        plt.title(f"분포 시각화(boxplot): {col}")
-        plt.tight_layout()
-        plt.show()
-        ```
+  - 코드
 
-    - 출력 결과
-        - `review_length`
+    ```python
+    for col in ["review_length", "rating", "sentiment_score"]:
+    plt.figure(figsize=(8, 4))
+    sns.histplot(df_clean[col], kde=True)
+    plt.title(f"분포 시각화(히스토그램): {col}")
+    plt.tight_layout()
+    plt.show()
 
-            ![review_length 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length_histogram.png)
-            ![review_length boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length_boxplot.png)
+    plt.figure(figsize=(8, 2.8))
+    sns.boxplot(x=df_clean[col])
+    plt.title(f"분포 시각화(boxplot): {col}")
+    plt.tight_layout()
+    plt.show()
+    ```
 
-        - `rating`
+  - 결과
 
-            ![rating 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating_histogram.png)
-            ![rating boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating_boxplot.png)
+    - **review_length**
 
-        - `sentimentic_score`
+      ![review_length 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length_histogram.png)
 
-            ![sentimentic_score 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentimentic_score_histogram.png)
-            ![rating boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentimentic_score_boxplot.png)
+      ![review_length boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length_boxplot.png)
 
+      - 리뷰 길이는 약 40~200자 범위 내에서 분포하며, 비교적 넓은 분산을 보였습니다.
+      - 히스토그램 기준 중간 길이(약 100~150자)에 리뷰가 많이 분포하는 경향이 나타났습니다.
+      - 박스플롯 상 극단적으로 튀는 이상치는 확인되지 않았으며, 전체적으로 안정적인 분포를 유지하고 있습니다.
+
+    - **rating**
+
+      ![rating 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating_histogram.png)
+      ![rating boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating_boxplot.png)
+
+      - 평점은 1~5의 이산값을 가지며, 전반적으로 3~5 구간에 비교적 많이 분포하였습니다.
+      - 박스플롯 기준 중앙값은 약 3 수준으로 확인되며, 특정 평점에 과도하게 치우친 분포는 관찰되지 않았습니다.
+      - 이상치로 판단할 만한 극단적인 값은 존재하지 않았습니다.
+
+    - **sentiment_score**
+
+      ![sentiment_score 히스토그램](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentiment_score_histogram.png)
+
+      ![sentiment_score boxplot](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentiment_score_boxplot.png)
+
+      - 감성 점수는 -1 ~ 1 범위 내에서 분포하며, 음수와 양수 영역 모두 고르게 나타났습니다.
+      - 히스토그램에서는 완만한 이중 봉우리 형태가 관찰되어, 긍·부정 리뷰가 모두 일정 비율 존재함을 확인할 수 있습니다.
+      - 박스플롯 기준에서도 이상치로 판단될 만한 값은 확인되지 않았습니다.
 
 - #### 이상치 탐지 (IQR / Z-score)
-    분포 시각화 이후, IQR 및 Z-score 기준을 활용하여 이상치를 정량적으로 탐지하였습니다.
-    - 코드
-        ```python
-        def iqr_outliers(s: pd.Series, k: float = 1.5) -> pd.Index:
-        """IQR 기반 이상치 인덱스 반환"""
-        s = s.dropna()
-        q1, q3 = s.quantile(0.25), s.quantile(0.75)
-        iqr = q3 - q1
-        lower, upper = q1 - k * iqr, q3 + k * iqr
-        return s[(s < lower) | (s > upper)].index
 
-        def zscore_outliers(s: pd.Series, z: float = 3.0) -> pd.Index:
-        """Z-score 기반 이상치 인덱스 반환"""
-        s = s.dropna()
-        zs = np.abs(stats.zscore(s))
-        return s[zs > z].index
+  분포 시각화 이후, IQR 및 Z-score 기준을 활용하여 이상치를 정량적으로 탐지하였습니다.
 
-        # 이상치 요약 테이블
-        outlier_rows = set()
-        outlier_report = []
+  - 코드
 
-        for col in ["review_length", "num_words", "sentiment_score"]:
-        idx_iqr = set(iqr_outliers(df_clean[col], k=1.5).tolist())
-        idx_z = set(zscore_outliers(df_clean[col], z=3.0).tolist())
-        union = idx_iqr.union(idx_z)
-        outlier_rows |= union
-        outlier_report.append({
-            "feature": col,
-            "iqr_outliers": len(idx_iqr),
-            "zscore_outliers": len(idx_z),
-            "union_outliers": len(union),
-            "union_ratio": len(union) / len(df_clean)
-        })
+    ```python
+    def iqr_outliers(s: pd.Series, k: float = 1.5) -> pd.Index:
+    """IQR 기반 이상치 인덱스 반환"""
+    s = s.dropna()
+    q1, q3 = s.quantile(0.25), s.quantile(0.75)
+    iqr = q3 - q1
+    lower, upper = q1 - k * iqr, q3 + k * iqr
+    return s[(s < lower) | (s > upper)].index
 
-        outlier_report_df = pd.DataFrame(outlier_report).sort_values("union_outliers", ascending=False)
-        print("\n[Outlier report]")
-        print(outlier_report_df)
+    def zscore_outliers(s: pd.Series, z: float = 3.0) -> pd.Index:
+    """Z-score 기반 이상치 인덱스 반환"""
+    s = s.dropna()
+    zs = np.abs(stats.zscore(s))
+    return s[zs > z].index
 
-        print("\nTotal unique outlier rows (union across features):", len(outlier_rows))
-        ```
-    - 출력 결과
+    # 이상치 요약 테이블
+    outlier_rows = set()
+    outlier_report = []
 
-        ![이상치 탐지 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/IQR_ZScore.png)
-    
-    - IQR 및 Z-score 기준 모두에서 이상치로 판단되는 데이터는 발견되지 않았고, 데이터 전반이 정상 범위 내에 분포하고 있음을 확인하였습니다. 따라서 이상치 제거 없이 전체 데이터를 분석 대상으로 유지하였습니다.
+    for col in ["review_length", "num_words", "sentiment_score"]:
+    idx_iqr = set(iqr_outliers(df_clean[col], k=1.5).tolist())
+    idx_z = set(zscore_outliers(df_clean[col], z=3.0).tolist())
+    union = idx_iqr.union(idx_z)
+    outlier_rows |= union
+    outlier_report.append({
+        "feature": col,
+        "iqr_outliers": len(idx_iqr),
+        "zscore_outliers": len(idx_z),
+        "union_outliers": len(union),
+        "union_ratio": len(union) / len(df_clean)
+    })
+
+    outlier_report_df = pd.DataFrame(outlier_report).sort_values("union_outliers", ascending=False)
+    print("\n[Outlier report]")
+    print(outlier_report_df)
+
+    print("\nTotal unique outlier rows (union across features):", len(outlier_rows))
+    ```
+
+  - 출력 결과
+
+    ![이상치 탐지 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/IQR_ZScore.png)
+
+  - IQR 및 Z-score 기준 모두에서 이상치로 판단되는 데이터는 발견되지 않았고, 데이터 전반이 정상 범위 내에 분포하고 있음을 확인하였습니다. 따라서 이상치 제거 없이 전체 데이터를 분석 대상으로 유지하였습니다.
 
 ---
 
@@ -211,16 +233,34 @@ AI 임베딩 및 유사도 분석 전,
 
 ### 3.1 주요 변수 기술 통계 요약
 
-| 변수            | 평균    | 중앙값 | 표준편차 |
-| --------------- | ------- | ------ | -------- |
-| review_length   | 약 124  | 125    | 41.65    |
-| num_words       | 약 29   | 28     | 11.31    |
-| sentiment_score | 약 0.02 | 0.03   | 0.61     |
-| rating          | 약 3.21 | 3      | 1.35     |
+리뷰 데이터의 전반적인 수치적 특성을 파악하기 위해 주요 변수의 기술 통계를 산출하였습니다.
+
+- 코드
+
+  ```python
+  NUM_COLS = ["review_length", "num_words", "sentiment_score", "rating"]
+
+  desc = df_clean[NUM_COLS].describe().T
+  desc["missing"] = df_clean[NUM_COLS].isna().sum()
+  desc["missing_ratio"] = desc["missing"] / len(df_clean)
+
+  print("\n[Describe numeric columns]")
+  print(desc)
+  ```
+
+- 결과
+  | 변수 | 평균 | 중앙값 | 표준편차 |
+  | --------------- | ------- | ------ | -------- |
+  | review_length | 약 124 | 125 | 41.65 |
+  | num_words | 약 29 | 28 | 11.31 |
+  | sentiment_score | 약 0.02 | 0.03 | 0.61 |
+  | rating | 약 3.21 | 3 | 1.35 |
 
 ---
 
 ### 3.2 카테고리별 평균 평점 분석 (barplot)
+
+카테고리별 평점 평균을 비교하여 상품 유형에 따른 평점 차이를 확인하였습니다.
 
 ![카테고리 별 평균 평점](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/category-avg_rating.png)
 
@@ -231,16 +271,19 @@ AI 임베딩 및 유사도 분석 전,
 
 ### 3.3 평점과 감성 점수 관계 분석 (violinplot)
 
+평점(`rating`)과 감성 점수(`sentiment_score`)의 관계를 시각화하여, 감성 점수가 평점에 영향을 주는지 확인하였습니다.
+
 ![평점과 감성 점수 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/rating-sentiment_score.png)
 
 - 감성 점수가 높아질수록 평점이 함께 증가하는 경향
-- 상관계수: **0.73 (강한 양의 상관관계)**
 
 ---
 
 ### 3.4 텍스트 길이와 평점 관계 분석 (boxplot)
 
-![텍스트 길이와 평점 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/text_length-avg_rating.png)
+리뷰 길이(review_length)가 평점과 관계가 있는지 확인하기 위해 분포 기반으로 비교하였습니다.
+
+![텍스트 길이와 평점 관계](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length-avg_rating.png)
 
 - 리뷰 길이와 평점 간 직접적인 관계는 뚜렷하지 않음
 
@@ -250,18 +293,74 @@ AI 임베딩 및 유사도 분석 전,
 
 ### 4.1 감성 점수와 평점의 관계
 
-- 감성 점수 분위수가 증가할수록 평균 평점이 단계적으로 상승
-- 감성 점수는 평점 예측에 핵심적인 변수
+감성 점수가 높을수록 평점이 높아지는지를 정량적으로 확인하기 위해 상관계수 및 분위수 구간별 평균 평점을 계산하였습니다. 또한 감성 점수를 분위수(5등분)로 나누어, 구간별 평균 평점 변화를 확인하였습니다.
+
+- 코드
+    ```python
+    corr = df_clean[["sentiment_score", "rating", "review_length", "num_words"]].corr(numeric_only=True)
+
+    print("\n[Correlation matrix]")
+    print(corr)
+
+    df_clean["sent_bin"] = pd.qcut(df_clean["sentiment_score"], q=5, duplicates="drop")
+    sent_bin_summary = df_clean.groupby("sent_bin").agg(
+    n=("review_id", "count"),
+    rating_mean=("rating", "mean"),
+    sentiment_mean=("sentiment_score", "mean"),)
+    print("\n[Sentiment Score bin summary]")
+    print(sent_bin_summary)
+    ```
+
+- 결과
+
+    ![속성 간 상관계수 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/correlation_matrix.png)
+
+    ![감성 점수와 평점의 관계 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/sentiment_score_bin.png)
+
+- 상관계수 결과, `sentiment_score`와 `rating`은 약 `0.73`의 강한 양의 상관관계를 보였습니다.
+- 감성 점수 분위수가 높아질수록 평균 평점이 단계적으로 상승하여, 감성 점수가 평점 및 추천 모델에 중요한 신호로 작용할 가능성이 높습니다.
 
 ### 4.2 리뷰 길이와 임베딩 유사도 영향 가능성
 
-- 리뷰 길이는 평점과의 직접 상관은 낮음
-- 임베딩 품질 관점에서 적정 길이 범위 설정 필요
+리뷰 길이는 임베딩 입력 텍스트의 정보량과 직결될 수 있으므로, 길이 구간별 평점 및 감성 점수 평균을 확인하였습니다.
+
+- 코드
+    ```python
+    df_clean["len_bin"] = pd.qcut(df_clean["review_length"], q=5, duplicates="drop")
+
+    len_bin_summary = df_clean.groupby("len_bin").agg(
+    n=("review_id", "count"),
+    rating_mean=("rating", "mean"),
+    sentiment_mean=("sentiment_score", "mean"),
+    len_mean=("review_length", "mean"),)
+
+    print("\n[Review Length bin summary]")
+    print(len_bin_summary)
+    ```
+- 결과
+
+    ![리뷰 길이와 임베딩 유사도 영향 가능성 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/review_length-bin.png)
+
+- 리뷰 길이 구간별 평균 평점은 큰 폭으로 단조 증가/감소하지 않아, 길이가 평점에 직접적 영향을 주는 변수로 보이진 않았습니다. 다만 임베딩 관점에서는 너무 짧은 텍스트가 정보 부족을 유발할 수 있고, 너무 긴 텍스트는 노이즈 증가/비용 증가를 야기할 수 있으므로 적정 길이 범위를 고려할 필요가 있습니다.
 
 ### 4.3 카테고리별 감성 점수 차이 분석
 
-- 카테고리별 평균 감성 점수 차이는 존재
-- 추천 모델에서 카테고리 정보 활용 필요성 확인
+카테고리별로 감성 점수 평균 차이가 존재하는지 검정하기 위해 ANOVA를 수행하였습니다.
+
+- 코드
+    ```python
+        groups = [g["sentiment_score"].dropna().values for _, g in df_clean.groupby("category")]
+        anova = stats.f_oneway(*groups) if len(groups) >= 2 else None
+
+        print("\n[ANOVA: Sentiment Score by category]")
+        print(anova)
+    ```
+
+- 결과
+
+    ![카테고리별 감성 점수 차이 분석 출력 결과](https://raw.githubusercontent.com/sehaim/skala-python/main/eda_example/output/text.png)
+
+- ANOVA 결과를 통해 카테고리별 감성 점수 평균 차이가 존재할 가능성을 확인하였으며, 추천 모델 설계 시 category 정보를 보조 변수로 활용할 여지가 있습니다.
 
 ---
 

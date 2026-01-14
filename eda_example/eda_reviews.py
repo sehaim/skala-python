@@ -237,9 +237,9 @@ plt.show()
 
 # =========================
 # 3) AI 분석을 위한 인사이트용 정량 체크
-#    - Q1 sentiment_score가 높을 수록 rating이 높나? (상관/회귀, 그룹 평균)
-#    - Q2 review_length가 임베딩 유사도에 영향을? (길이 proxy로 분산/패턴 확인)
-#    - Q3 category 별 sentiment 평균 차이? (ANOVA)
+#    - Q1 sentiment_score가 높을 수록 rating이 높은가? (상관/회귀, 그룹 평균)
+#    - Q2 review_length가 임베딩 유사도에 영향을 미치는가? (길이 proxy로 분산/패턴 확인)
+#    - Q3 category 별 sentiment 평균 차이 (ANOVA)
 # =========================
 
 # Q1) 상관계수
@@ -254,7 +254,7 @@ sent_bin_summary = df_clean.groupby("sent_bin").agg(
     rating_mean=("rating", "mean"),
     sentiment_mean=("sentiment_score", "mean"),
 )
-print("\n[Sentiment bin summary]")
+print("\n[Sentiment Score bin summary]")
 print(sent_bin_summary)
 
 plt.figure(figsize=(9, 4))
@@ -272,7 +272,7 @@ len_bin_summary = df_clean.groupby("len_bin").agg(
     sentiment_mean=("sentiment_score", "mean"),
     len_mean=("review_length", "mean"),
 )
-print("\n[Length bin summary]")
+print("\n[Review Length bin summary]")
 print(len_bin_summary)
 
 plt.figure(figsize=(9, 4))
@@ -282,11 +282,10 @@ plt.xticks(rotation=25, ha="right")
 plt.tight_layout()
 plt.show()
 
-# Q3) category별 sentiment 평균 차이: ANOVA (간단 검정)
-#     - 전제(정규성/등분산)가 완벽하진 않을 수 있어 EDA 수준 참고용
+# Q3) category별 sentiment 평균 차이
 groups = [g["sentiment_score"].dropna().values for _, g in df_clean.groupby("category")]
 anova = stats.f_oneway(*groups) if len(groups) >= 2 else None
-print("\n[ANOVA: sentiment_score by category]")
+print("\n[ANOVA: Sentiment Score by Category]")
 print(anova)
 
 plt.figure(figsize=(8, 4))
